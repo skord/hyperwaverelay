@@ -1,8 +1,9 @@
 require "bundler/setup"
 require "hyperwaverelay/version"
-require "securerandom"
+require "hyperwaverelay/keys"
+require "hyperwaverelay/vault"
+require "hyperwaverelay/util"
 require "thor"
-require 'sshkey'
 
 module Hyperwaverelay 
   class Cli < Thor
@@ -19,21 +20,17 @@ module Hyperwaverelay
       ["group_vars","host_vars","roles"].each do |dir|
         empty_directory("#{name}/#{dir}")
       end
-      create_file "#{name}/.vault_password" do
-        SecureRandom::base64(20)
-      end
       create_file "#{name}/group_vars/all" do
         "---\n"
       end
-      key = ::SSHKey.generate
-      create_file "#{ENV['HOME']}/.ssh/ansible_deploy" do
-        key.private_key
-      end
-      create_file "#{ENV['HOME']}/.ssh/ansible_deploy.pub" do
-        key.ssh_public_key
-      end
-      template "hyperwaverelay/templates/ansible.cfg.tt", "#{name}/ansible.cfg"
+      template "hyperwaverelay/templates/ansible.cfg.tt", "#{name}/ansible.cfg", {name: name}
+      invoke "hyperwaverelay:keys:keygen"
+      invoke "hyperwaverelay:vault:gen"
     end
+    desc "keys SUBCOMMAND ARGS", "manage SSH keys" 
+    subcommand "keys", Keys
+    desc "vault SUBCOMMAND ARGS", "manage vault"
+    subcommand "vault", Vault
   end
 end
 
