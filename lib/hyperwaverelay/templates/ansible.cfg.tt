@@ -1,0 +1,7 @@
+[defaults]
+ansible_managed = Ansible Managed: {file} modified on %Y-%m-%d %H:%M:%S by {uid} on {host}
+vault_password_file = .vault_password
+<% if options[:disable_host_key_checking] %>host_key_checking = False <% end %>
+<% if options[:remote_user] %>remote_user = <%= options[:remote_user] %><% end %>
+<% if options[:inventory] %>inventory = <%= options[:inventory] %><% end %>
+private_key_file = <%= ENV['HOME'] %>/.ssh/ansible_deploy

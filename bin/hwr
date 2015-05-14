@@ -1,0 +1,4 @@
+#!/usr/bin/env ruby
+require "hyperwaverelay"
+require "bundler/setup"
+Hyperwaverelay::Cli.start(ARGV)
