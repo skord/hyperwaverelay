@@ -1,4 +1,3 @@
-require 'thor'
 require 'securerandom'
 
 module Hyperwaverelay

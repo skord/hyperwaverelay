@@ -1,4 +1,10 @@
 #!/usr/bin/env ruby
 require "hyperwaverelay"
 require "bundler/setup"
+require "thor"
+class Thor
+  def self.source_root
+    File.dirname(__FILE__)
+  end
+end
 Hyperwaverelay::Cli.start(ARGV)
